@@ -64,9 +64,10 @@ Ready to contribute? Here's how to set up `decomnano` for local development.
 
     $ git clone git@github.com:your_name_here/decomnano.git
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+3. Install your local copy into a virtualenv. Assuming you have conda installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv decomnano
+    $ conda create -n decomnano python=3.9
+    $ conda activate decomnano
     $ cd decomnano/
     $ python setup.py develop
 

@@ -1,3 +1,24 @@
+Metadata-Version: 2.1
+Name: decomnano
+Version: 0.1.0
+Summary: Heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.
+Home-page: https://github.com/Ameyanagi/decomnano
+Author: Ryuichi Shimogawa
+Author-email: ryuichi.shimogawa@stonybrook.edu
+License: MIT license
+Keywords: decomnano
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.6
+License-File: LICENSE
+License-File: AUTHORS.rst
+
 =========
 DecomNano
 =========
@@ -41,3 +62,13 @@ Citation
 --------
 
 If you use DecomNano in your research, please cite the following paper:
+
+
+=======
+History
+=======
+
+0.1.0 (2023-04-23)
+------------------
+
+* First release on PyPI.

@@ -1,0 +1,2 @@
+[console_scripts]
+decomnano = decomnano.cli:main
