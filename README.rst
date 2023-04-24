@@ -1,3 +1,42 @@
+# DecomNano
+
+DecomNano is a heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.
+
+# Installation
+
+## Requirements
+
+DecomNano requires [Mathematica](https://www.wolfram.com/mathematica/) for solving non-liner equations.
+Other requirements for python can be installed by the following command.
+
+```bash
+pip install -r requirements.txt
+```
+
+
+# Documentation
+
+The documentation is hosted on [Read the Docs (still under construction)]().
+
+
+# Change log
+
+Please see the [Commit History](https://github.com/Ameyanagi/DecomNano/commits/main) for more information on what has changed recently.
+
+# How to cite DecomNano
+
+# License
+
+
+
+
+
+
+
+
+Below are still udner construction.
+
+
 =========
 DecomNano
 =========
@@ -13,14 +52,23 @@ DecomNano
         :target: https://decomnano.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-
-
-
-Heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.
+DecomNano is a heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.
 
 
 * Free software: MIT license
 * Documentation: https://decomnano.readthedocs.io.
+
+Requirements
+------------
+
+DecomNano requires Mathematica_ for solving non-liner equations.
+Other requirements for python can be installed by the following command.
+
+.. _Mathematica: https://www.wolfram.com/mathematica/
+
+.. code-block:: bash
+
+    pip install -r requirements.txt
 
 
 Features
@@ -28,10 +76,7 @@ Features
 
 * TODO
 
-Credits
--------
+Citation
+--------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+If you use DecomNano in your research, please cite the following paper:
