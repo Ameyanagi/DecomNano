@@ -1,0 +1,33 @@
+# Example configuration file for DecomNano
+
+# Single run is done if sweep is false
+# Sweep is done if sweep is true
+sweep = false
+
+# You can specify the output file name. If not specified, the default name is "results.csv"
+output = "decomnano_results.csv"
+
+[input]
+# input section is used for input of DecomNano if sweep is false
+# input section is used for input_default of SweepDecomNano if sweep is true
+dP=2.77
+dA=2.88
+fA=0.8
+nAA=6.2
+nPP=9.8
+nAP=0.5
+nPA=0.53
+DA=0
+DAP=18
+DP=0
+
+[input_config]
+# Input_config section is used for defining the sweep range of each parameter.
+# It is required if sweep is true.
+# It will be ignored if sweep is false.
+# Accepted types are number, list and dictionary.
+# A dictionary will require start, end and step, and will generate a list of range(start, end, step). end is not included as in range() function in python.
+nAA=0.1                                 
+DAP=[16, 17, 18]                        
+DA={start=0, end=2, step=1}             
+

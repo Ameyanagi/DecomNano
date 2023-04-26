@@ -1,42 +1,107 @@
 #!/usr/bin/env python
 
-"""Tests for `decomnano` package."""
+"""Tests for `decomnano.decomnano` module."""
 
-import pytest
+import decomnano
+import pandas as pd
+import os
 
-from click.testing import CliRunner
-
-from decomnano import decomnano
-from decomnano import cli
-
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
-
-
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+test_input = dict(
+    dP=2.77,
+    dA=2.88,
+    fA=0.2,
+    nAA=6.5,
+    nPP=9.9,
+    nAP=0.6,
+    nPA=1.13,
+    DA=0,
+    DAP=18,
+    DP=5,
+)
 
 
-def test_command_line_interface():
-    """Test the CLI."""
-    runner = CliRunner()
-    result = runner.invoke(cli.main)
-    assert result.exit_code == 0
-    assert "decomnano.cli.main" in result.output
-    help_result = runner.invoke(cli.main, ["--help"])
-    assert help_result.exit_code == 0
-    assert "--help  Show this message and exit." in help_result.output
+def test_DecomNano_arguments():
+    """Test DecomNano arguments"""
+
+    dn = decomnano.DecomNano(input=test_input)
+
+    for key, value in test_input.items():
+        assert dn.input[key] == value
 
 
-def test_print_abc():
-    """Test print_abc."""
-    assert decomnano.print_abc() == 0
+def test_DecomNano_init_input():
+    """Test DecomNano init_input"""
+    dn = decomnano.DecomNano()
+    dn.init_input(**test_input)
+
+    for key, value in test_input.items():
+        assert dn.input[key] == value
+
+
+def test_DecomNano_solve_decomnano():
+    """Test DecomNano solve_decomnano solvable case"""
+
+    # Test for solvable case
+    answer_df = pd.read_csv(
+        os.path.join(decomnano.__DecomNano_TESTFILE_DIR__, "test_result.csv"),
+        index_col=0,
+    )
+
+    input_solvable = dict(
+        dP=2.77,
+        dA=2.88,
+        fA=0.8,
+        nAA=6.2,
+        nPP=9.8,
+        nAP=0.5,
+        nPA=0.53,
+        DA=0,
+        DAP=18,
+        DP=0,
+    )
+
+    dn = decomnano.DecomNano(input=input_solvable)
+    df = dn.solve_decomnano()
+
+    pd.testing.assert_frame_equal(df, answer_df)
+
+
+def test_DecomNano_solve_decomnano_insolvable():
+    """Test DecomNano solve_decomnano insolvable case"""
+
+    answer_df = pd.read_csv(
+        os.path.join(
+            decomnano.__DecomNano_TESTFILE_DIR__, "test_result_insolvable.csv"
+        ),
+        index_col=0,
+    )
+
+    input_insolvable = dict(
+        dP=2.77,
+        dA=2.88,
+        fA=0.8,
+        nAA=6.2,
+        nPP=9.8,
+        nAP=0.5,
+        nPA=0.33,
+        DA=18,
+        DAP=18,
+        DP=18,
+    )
+
+    dn = decomnano.DecomNano(input=input_insolvable)
+    df = dn.solve_decomnano()
+
+    pd.testing.assert_frame_equal(df, answer_df, check_dtype=False)
+
+
+def test_DecomNano_check_duplicate_input():
+    """Test DecomNano check_duplicate_input"""
+
+    dn = decomnano.DecomNano(input=test_input)
+
+    assert dn.check_duplicate_input() == False
+
+    dn.solve_decomnano()
+
+    assert dn.check_duplicate_input() == True

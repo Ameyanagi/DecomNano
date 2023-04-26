@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>decomnano.decomnano &mdash; DecomNano 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DecomNano
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">DecomNano</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">decomnano</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DecomNano</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">decomnano.decomnano</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for decomnano.decomnano</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Main module.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">wolframclient.evaluation</span> <span class="kn">import</span> <span class="n">WolframLanguageSession</span>
+<span class="kn">from</span> <span class="nn">wolframclient.language</span> <span class="kn">import</span> <span class="n">wl</span><span class="p">,</span> <span class="n">wlexpr</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="DecomNano"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano">[docs]</a><span class="k">class</span> <span class="nc">DecomNano</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;DecomNano class for solving the heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wolfram_kernel (str): Path to the Wolfram kernel. Defaults to None, which searches system default.</span>
+<span class="sd">        input (dict): Input dictionary for the heterogeneity analysis. Defaults are {&quot;dP&quot;: 2.77, &quot;dA&quot;: 2.88, &quot;fA&quot;: 0.2, &quot;nAA&quot;: 6.5, &quot;nPP&quot;: 9.9, &quot;nAP&quot;: 0.6, &quot;nPA&quot;: 1.13, &quot;DA&quot;: 0, &quot;DAP&quot;: 18, &quot;DP&quot;: 5}.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        session (WolframLanguageSession): Wolfram Language session</span>
+<span class="sd">        input (dict): Input dictionary for the heterogeneity analysis. Defaults are {&quot;dP&quot;: 2.77, &quot;dA&quot;: 2.88, &quot;fA&quot;: 0.2, &quot;nAA&quot;: 6.5, &quot;nPP&quot;: 9.9, &quot;nAP&quot;: 0.6, &quot;nPA&quot;: 1.13, &quot;DA&quot;: 0, &quot;DAP&quot;: 18, &quot;DP&quot;: 5}.</span>
+<span class="sd">        results (pd.DataFrame): Results of the heterogeneity analysis</span>
+<span class="sd">        column (list): Column names of the results</span>
+<span class="sd">        dict_regex (re.Pattern): Regular expression for converting the mathematica results to a dictionary</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The variables in the input dictionary different from the paper due to the naming rules of python. Following table shows the correspondence between the variables in the paper and the input dictionary.</span>
+
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        | Notation in paper                         | Keys       | Descriptions                                                          |</span>
+<span class="sd">        +===========================================+============+=======================================================================+</span>
+<span class="sd">        |:math:`d_P`                                | dP         | Interatomic spacing of Pt nanoparticles                               |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`d_A`                                | dA         | Interatomic spacing of Au nanoparticles                               |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`\frac{M_A}{M_A + M_P}`              | fA         | Molar fraction of Au                                                  |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-A}`                            | nAA        | Total first nearest neighbor coordination number of Au-Au bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-P}`                            | nPP        | Total first nearest neighbor coordination number of Pt-Pt bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-P}`                            | nAP        | Total first nearest neighbor coordination number of Au-Pt bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-A}`                            | nPA        | Total first nearest neighbor coordination number of Pt-Au bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`D_A`                                | DA         | Diameter of Au nanoparticles                                          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`D_{AP}`                             | DAP        | Diameter of PtAu nanoparticles                                        |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`D_P`                                | DP         | Diameter of Pt nanoparticles                                          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-M,AP}`                         | nAM_AP     | First nearest neighbor coordination number of Au-metal bonds          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-M,AP}`                         | nPM_AP     | First nearest neighbor coordination number of Pt-metal bonds          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-A,AP}`                         | nAA_AP     | First nearest neighbor coordination number of Au-Au bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-P,AP}`                         | nAP_AP     | First nearest neighbor coordination number of Au-Pt bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-A,AP}`                         | nPA_AP     | First nearest neighbor coordination number of Pt-Au bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-P,AP}`                         | nPP_AP     | First nearest neighbor coordination number of Pt-Pt bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`X_A`                                | XA         | Molar ratio of Au nanoparticles                                       |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`X_{AP}`                             | XAP        | Molar ratio of PtAu nanoparticles                                     |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`X_P`                                | XP         | Molar ratio of Pt nanoparticles                                       |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`y`                                  | y          | Molar fraction of Au in PtAu nanoparticles                            |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Template for the function call in Mathematica&quot;&quot;&quot;</span>
+    <span class="n">decomnano_equation</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;DecomNano[</span><span class="si">{dP}</span><span class="s2">, </span><span class="si">{dA}</span><span class="s2">, </span><span class="si">{fA}</span><span class="s2">, </span><span class="si">{nAA}</span><span class="s2">, </span><span class="si">{nPP}</span><span class="s2">, </span><span class="si">{nAP}</span><span class="s2">, </span><span class="si">{nPA}</span><span class="s2">, </span><span class="si">{DA}</span><span class="s2">, </span><span class="si">{DAP}</span><span class="s2">, </span><span class="si">{DP}</span><span class="s2">]&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wolfram_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">WolframLanguageSession</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">wolfram_kernel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;./DecomNano.wl&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Rule\[Global`(.*?), (.*?)]&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">column</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;dP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nAA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nPP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nAP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nPA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DAP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nAM_AP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nPM_AP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nAA_AP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nAP_AP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nPA_AP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nPP_AP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;XAP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;XA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;XP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">dP</span><span class="o">=</span><span class="mf">2.77</span><span class="p">,</span>
+            <span class="n">dA</span><span class="o">=</span><span class="mf">2.88</span><span class="p">,</span>
+            <span class="n">fA</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+            <span class="n">nAA</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span>
+            <span class="n">nPP</span><span class="o">=</span><span class="mf">9.9</span><span class="p">,</span>
+            <span class="n">nAP</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+            <span class="n">nPA</span><span class="o">=</span><span class="mf">1.13</span><span class="p">,</span>
+            <span class="n">DA</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+            <span class="n">DP</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DecomNano.init_input"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.init_input">[docs]</a>    <span class="k">def</span> <span class="nf">init_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the input dictionary of DecomNano class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Keyword arguments for the input dictionary. Defaults are {&quot;dP&quot;: 2.77, &quot;dA&quot;: 2.88, &quot;fA&quot;: 0.2, &quot;nAA&quot;: 6.5, &quot;nPP&quot;: 9.9, &quot;nAP&quot;: 0.6, &quot;nPA&quot;: 1.13, &quot;DA&quot;: 0, &quot;DAP&quot;: 18, &quot;DP&quot;: 5}.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; dn = DecomNano()</span>
+<span class="sd">            &gt;&gt;&gt; dn.init_input(RPt=2.77, RAu=2.88, fAu=0.2, nAuAu=6.5, nPtPt=9.9, nAuPt=0.6, nPtAu=1.13, DA=0, DAP=18, DP=5)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">dP</span><span class="o">=</span><span class="mf">2.77</span><span class="p">,</span>
+            <span class="n">dA</span><span class="o">=</span><span class="mf">2.88</span><span class="p">,</span>
+            <span class="n">fA</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+            <span class="n">nAA</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span>
+            <span class="n">nPP</span><span class="o">=</span><span class="mf">9.9</span><span class="p">,</span>
+            <span class="n">nAP</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+            <span class="n">nPA</span><span class="o">=</span><span class="mf">1.13</span><span class="p">,</span>
+            <span class="n">DA</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+            <span class="n">DP</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DecomNano.calc_decomnano"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.calc_decomnano">[docs]</a>    <span class="k">def</span> <span class="nf">calc_decomnano</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize and solve the heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Keyword arguments for the input dictionary. Defaults are {&quot;dP&quot;: 2.77, &quot;dA&quot;: 2.88, &quot;fA&quot;: 0.2, &quot;nAA&quot;: 6.5, &quot;nPP&quot;: 9.9, &quot;nAP&quot;: 0.6, &quot;nPA&quot;: 1.13, &quot;DA&quot;: 0, &quot;DAP&quot;: 18, &quot;DP&quot;: 5}.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; dn = DecomNano()</span>
+<span class="sd">            &gt;&gt;&gt; dn.calc_decomnano(RPt=2.77, RAu=2.88, fAu=0.2, nAuAu=6.5, nPtPt=9.9, nAuPt=0.6, nPtAu=1.13, DA=0, DAP=18, DP=5)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># if self.check_duplicate_input():</span>
+        <span class="c1">#     return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">solve_decomnano</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DecomNano.print_input"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.print_input">[docs]</a>    <span class="k">def</span> <span class="nf">print_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints the input dictionary of DecomNano class.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DecomNano.solve_decomnano"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.solve_decomnano">[docs]</a>    <span class="k">def</span> <span class="nf">solve_decomnano</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solves the heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.&quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+            <span class="n">wlexpr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decomnano_equation</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
+        <span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">df</span></div>
+
+<div class="viewcode-block" id="DecomNano.check_duplicate_input"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.check_duplicate_input">[docs]</a>    <span class="k">def</span> <span class="nf">check_duplicate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the input dictionary is already solved.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the input dictionary is already solved, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">input_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+        <span class="n">input_columns</span> <span class="o">=</span> <span class="n">input_df</span><span class="o">.</span><span class="n">index</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">input_columns</span><span class="p">]</span> <span class="o">==</span> <span class="n">input_df</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">df</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="DecomNano.convert_dict"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.convert_dict">[docs]</a>    <span class="k">def</span> <span class="nf">convert_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function to convert the result of WolframLanguageSession.evaluate() to a dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Dictionary of the result.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dict_result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict_regex</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+        <span class="n">dict_result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">dict_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dict_result</span></div>
+
+<div class="viewcode-block" id="DecomNano.print_results"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.print_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints the results of the heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DecomNano.save_results"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.save_results">[docs]</a>    <span class="k">def</span> <span class="nf">save_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;results.csv&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the results of the heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Filename of the results. Defaults to &quot;results.csv&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DecomNano.load_results"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.load_results">[docs]</a>    <span class="k">def</span> <span class="nf">load_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;results.csv&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the results to the DecomNano class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Filename of the results. Defaults to &quot;results.csv&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DecomNano.terminate"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.terminate">[docs]</a>    <span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Terminates the WolframLanguageSession.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Destructor of DecomNano class. Makes sure that the WolframLanguageSession is terminated.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ryuichi Shimogawa.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
