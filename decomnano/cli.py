@@ -24,7 +24,9 @@ def parse_array_in_config(config_dict):
     return config_dict
 
 
-def run_sweep(config_dict=None, output="result.csv", interval=100, kernel=None):
+def run_sweep(
+    config_dict=None, output="result.csv", interval=100, kernel=None, resolution=0.1
+):
     """Run SweepDecomNano with config_dict."""
 
     config_dict = parse_array_in_config(config_dict)
@@ -34,6 +36,7 @@ def run_sweep(config_dict=None, output="result.csv", interval=100, kernel=None):
         input_config=config_dict["input_config"],
         wolfram_kernel=kernel,
     )
+    sd.calc_input_range(resolution=resolution)
     sd.calc_sweep(savepath=output, save_interval=interval)
 
 
@@ -91,7 +94,15 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
     required=False,
     help="Path to Wolfram Engine kernel.",
 )
-def main(sweep, config, output, interval, kernel):
+@click.option(
+    "-r",
+    "--resolution",
+    type=float,
+    default=0.1,
+    required=False,
+    help="Resolution of sweep.",
+)
+def main(sweep, config, output, interval, kernel, resolution):
     """Console script for DecomNano.\n
     DecomNano is a heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.\n
     """
@@ -107,8 +118,24 @@ def main(sweep, config, output, interval, kernel):
     else:
         print("No output file specified. Using default output file: result.csv")
 
+    if kernel is not None:
+        pass
+    elif "kernel" in config_dict.keys():
+        kernel = config_dict["kernel"]
+
+    if resolution is not None:
+        pass
+    elif "resolution" in config_dict.keys():
+        resolution = config_dict["resolution"]
+
     if sweep or config_dict["sweep"]:
-        run_sweep(config_dict, output_filepath, interval=interval, kernel=kernel)
+        run_sweep(
+            config_dict,
+            output_filepath,
+            interval=interval,
+            kernel=kernel,
+            resolution=resolution,
+        )
     else:
         run_decomnano(config_dict, output_filepath, kernel=kernel)
 
