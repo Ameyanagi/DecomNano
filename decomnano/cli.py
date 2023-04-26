@@ -32,7 +32,7 @@ def run_sweep(config_dict=None, output="result.csv", interval=100, kernel=None):
     sd = SweepDecomNano(
         input_default=config_dict["input"],
         input_config=config_dict["input_config"],
-        kernel=kernel,
+        wolfram_kernel=kernel,
     )
     sd.calc_sweep(savepath=output, save_interval=interval)
 
@@ -44,7 +44,7 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
 
     dn = DecomNano(
         input=dict(config_dict["input"]),
-        kernel=kernel,
+        wolfram_kernel=kernel,
     )
     df = dn.solve_decomnano()
     df.to_csv(output)
