@@ -12,6 +12,9 @@ with open("HISTORY.rst") as history_file:
 
 requirements = [
     "Click>=7.0",
+    "wolframclient",
+    "pandas",
+    "numpy",
 ]
 
 test_requirements = [
@@ -21,15 +24,13 @@ test_requirements = [
 setup(
     author="Ryuichi Shimogawa",
     author_email="ryuichi.shimogawa@stonybrook.edu",
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

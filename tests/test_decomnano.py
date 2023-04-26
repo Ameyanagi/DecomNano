@@ -100,8 +100,8 @@ def test_DecomNano_check_duplicate_input():
 
     dn = decomnano.DecomNano(input=test_input)
 
-    assert dn.check_duplicate_input() == False
+    assert not dn.check_duplicate_input()
 
     dn.solve_decomnano()
 
-    assert dn.check_duplicate_input() == True
+    assert dn.check_duplicate_input()

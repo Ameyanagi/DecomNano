@@ -207,7 +207,7 @@ class DecomNano(object):
             dict: Dictionary of the result.
         """
         dict_result = re.findall(self.dict_regex, str(result))
-        dict_result = dict(dict_list)
+        dict_result = dict(dict_result)
         return dict_result
 
     def print_results(self):

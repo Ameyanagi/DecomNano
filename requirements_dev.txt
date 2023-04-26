@@ -11,7 +11,6 @@ Click
 pytest
 black
 cpython
-
 wolframclient
 pandas
 numpy

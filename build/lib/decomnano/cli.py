@@ -88,14 +88,14 @@ def main(sweep, config, output, interval):
     if config is None:
         raise ValueError("Please specify config file.")
 
+    config_dict = toml.load(config)
+
     if output is not None:
         output_filepath = output
     elif "output" in config_dict.keys():
         output_filepath = config_dict["output"]
     else:
         print("No output file specified. Using default output file: result.csv")
-
-    config_dict = toml.load(config)
 
     if sweep or config_dict["sweep"]:
         run_sweep(config_dict, output_filepath, interval=interval)
