@@ -55,8 +55,9 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">decomnano package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-decomnano.cli">decomnano.cli module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#decomnano.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decomnano.cli.parse_array_in_config"><code class="docutils literal notranslate"><span class="pre">parse_array_in_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomnano.cli.run_decomnano"><code class="docutils literal notranslate"><span class="pre">run_decomnano()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decomnano.cli.run_sweep"><code class="docutils literal notranslate"><span class="pre">run_sweep()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-decomnano.decomnano">decomnano.decomnano module</a><ul>
@@ -111,16 +112,22 @@
 <span id="decomnano-cli-module"></span><h2>decomnano.cli module<a class="headerlink" href="#module-decomnano.cli" title="Permalink to this heading"></a></h2>
 <p>Console script for decomnano.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="decomnano.cli.main">
-<span class="sig-prename descclassname"><span class="pre">decomnano.cli.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sweep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/decomnano/cli.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#decomnano.cli.main" title="Permalink to this definition"></a></dt>
-<dd><p>Console script for DecomNano.</p>
-<p>DecomNano is a heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.</p>
+<dt class="sig sig-object py" id="decomnano.cli.parse_array_in_config">
+<span class="sig-prename descclassname"><span class="pre">decomnano.cli.</span></span><span class="sig-name descname"><span class="pre">parse_array_in_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/decomnano/cli.html#parse_array_in_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#decomnano.cli.parse_array_in_config" title="Permalink to this definition"></a></dt>
+<dd><p>Parse array in config file to numpy array.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="decomnano.cli.run_decomnano">
-<span class="sig-prename descclassname"><span class="pre">decomnano.cli.</span></span><span class="sig-name descname"><span class="pre">run_decomnano</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/decomnano/cli.html#run_decomnano"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#decomnano.cli.run_decomnano" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">decomnano.cli.</span></span><span class="sig-name descname"><span class="pre">run_decomnano</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/decomnano/cli.html#run_decomnano"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#decomnano.cli.run_decomnano" title="Permalink to this definition"></a></dt>
+<dd><p>Run DecomNano with config_dict.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="decomnano.cli.run_sweep">
+<span class="sig-prename descclassname"><span class="pre">decomnano.cli.</span></span><span class="sig-name descname"><span class="pre">run_sweep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/decomnano/cli.html#run_sweep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#decomnano.cli.run_sweep" title="Permalink to this definition"></a></dt>
+<dd><p>Run SweepDecomNano with config_dict.</p>
+</dd></dl>
 
 </section>
 <section id="module-decomnano.decomnano">
