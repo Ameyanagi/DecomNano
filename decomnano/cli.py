@@ -24,7 +24,7 @@ def parse_array_in_config(config_dict):
     return config_dict
 
 
-def run_sweep(config_dict=None, output="result.csv", interval=100):
+def run_sweep(config_dict=None, output="result.csv", interval=100, kernel=None):
     """Run SweepDecomNano with config_dict."""
 
     config_dict = parse_array_in_config(config_dict)
@@ -32,17 +32,19 @@ def run_sweep(config_dict=None, output="result.csv", interval=100):
     sd = SweepDecomNano(
         input_default=config_dict["input"],
         input_config=config_dict["input_config"],
+        kernel=kernel,
     )
     sd.calc_sweep(savepath=output, save_interval=interval)
 
 
-def run_decomnano(config_dict=None, output="result.csv"):
+def run_decomnano(config_dict=None, output="result.csv", kernel=None):
     """Run DecomNano with config_dict."""
 
     config_dict = parse_array_in_config(config_dict)
 
     dn = DecomNano(
         input=dict(config_dict["input"]),
+        kernel=kernel,
     )
     df = dn.solve_decomnano()
     df.to_csv(output)
@@ -81,7 +83,15 @@ def run_decomnano(config_dict=None, output="result.csv"):
     required=False,
     help="Interval of printing results in sweep.",
 )
-def main(sweep, config, output, interval):
+@click.option(
+    "-k",
+    "--kernel",
+    type=str,
+    default=None,
+    required=False,
+    help="Path to Wolfram Engine kernel.",
+)
+def main(sweep, config, output, interval, kernel):
     """Console script for DecomNano.\n
     DecomNano is a heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.\n
     """
@@ -98,9 +108,9 @@ def main(sweep, config, output, interval):
         print("No output file specified. Using default output file: result.csv")
 
     if sweep or config_dict["sweep"]:
-        run_sweep(config_dict, output_filepath, interval=interval)
+        run_sweep(config_dict, output_filepath, interval=interval, kernel=kernel)
     else:
-        run_decomnano(config_dict, output_filepath)
+        run_decomnano(config_dict, output_filepath, kernel=kernel)
 
     return 0
 
