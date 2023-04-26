@@ -74,7 +74,7 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
     "-o",
     "--output",
     type=str,
-    default="result.csv",
+    default=None,
     required=False,
     help="Path to output file.",
 )
@@ -116,6 +116,7 @@ def main(sweep, config, output, interval, kernel, resolution):
     elif "output" in config_dict.keys():
         output_filepath = config_dict["output"]
     else:
+        output_filepath = "result.csv"
         print("No output file specified. Using default output file: result.csv")
 
     if kernel is not None:
