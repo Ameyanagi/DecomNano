@@ -78,7 +78,7 @@ class DecomNano(object):
 
     def __init__(self, wolfram_kernel=None, input=None):
         self.session = WolframLanguageSession(kernel=wolfram_kernel)
-        self.session.evaluate(wl.Get(os.path.join(current_dir, "DecomNano.wl")))
+        self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
         self.results = pd.DataFrame()
         self.dict_regex = re.compile(r"Rule\[Global`(.*?), (.*?)]")
 
