@@ -10,5 +10,7 @@ Maintainer
 Contributors
 ------------
 
+* Maichong Xie
+* Anatoly I. Frenekel
+* Marc R.Knecht
 
-None yet. Why not be the first?

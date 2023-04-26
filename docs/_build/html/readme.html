@@ -49,7 +49,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">DecomNano</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installation-from-pypi">Installation from PyPI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation-from-source">Installation from source</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-interface">Command Line Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-api">Python API</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#citation">Citation</a></li>
 </ul>
 </li>
@@ -89,29 +98,62 @@
 <h1>DecomNano<a class="headerlink" href="#decomnano" title="Permalink to this heading"></a></h1>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/decomnano"><img alt="https://img.shields.io/pypi/v/decomnano.svg" src="https://img.shields.io/pypi/v/decomnano.svg" /></a>
 <a class="reference external image-reference" href="https://travis-ci.com/Ameyanagi/decomnano"><img alt="https://img.shields.io/travis/Ameyanagi/decomnano.svg" src="https://img.shields.io/travis/Ameyanagi/decomnano.svg" /></a>
-<a class="reference external image-reference" href="https://decomnano.readthedocs.io/en/latest/?version=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/decomnano/badge/?version=latest" /></a>
+<a class="reference external image-reference" href="https://github.com/Ameyanagi/DecomNano/actions/workflows/documentation.yaml/badge.svg"><img alt="Documentation Status" src="https://ameyanagi.github.io/DecomNano/index.html" /></a>
 <p>DecomNano is a heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.</p>
 <ul class="simple">
 <li><p>Free software: MIT license</p></li>
-<li><p>Documentation: <a class="reference external" href="https://decomnano.readthedocs.io">https://decomnano.readthedocs.io</a>.</p></li>
+<li><p>Documentation: <a class="reference external" href="https://ameyanagi.github.io/DecomNano/index.html">https://ameyanagi.github.io/DecomNano/index.html</a>.</p></li>
 </ul>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
-<p>DecomNano requires <a class="reference external" href="https://www.wolfram.com/mathematica/">Mathematica</a> for solving non-liner equations.
-Other requirements for python can be installed by the following command.</p>
+<p>DecomNano requires <a class="reference external" href="https://www.wolfram.com/mathematica/">Mathematica</a> for solving non-liner equations. Please install <a class="reference external" href="https://www.wolfram.com/mathematica/">Mathematica</a> or <a class="reference external" href="https://www.wolfram.com/engine/">Wolfram Engine</a>.n
+Other requirements for python can be installed by pip command.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
 </section>
-<section id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h2>
-<ul class="simple">
-<li><p>TODO</p></li>
-</ul>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>Detailed instructions for installation are available in the <a class="reference external" href="https://ameyanagi.github.io/DecomNano/installation.html">installation documentation</a>.</p>
+<section id="installation-from-pypi">
+<h3>Installation from PyPI<a class="headerlink" href="#installation-from-pypi" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>decomnano
+</pre></div>
+</div>
+</section>
+<section id="installation-from-source">
+<h3>Installation from source<a class="headerlink" href="#installation-from-source" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Ameyanagi/DecomNano
+</pre></div>
+</div>
+<p>or clone the repository and install from local source.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ameyanagi/DecomNano
+<span class="nb">cd</span><span class="w"> </span>DecomNano
+pip<span class="w"> </span>install<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
+<section id="command-line-interface">
+<h3>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this heading"></a></h3>
+<p>Detailed instructions for usage are available in the <a class="reference external" href="https://ameyanagi.github.io/DecomNano/usage.html">usage documentation</a>.</p>
+<p>The decomnano package comes with a command line interface (CLI) that can be used to run the analysis. The configuration file can be found in the <a class="reference external" href="https://github.com/Ameyanagi/DecomNano/tree/main/examples">examples</a> directory. Download the configuration file and run the following command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>decomnano<span class="w"> </span>-c<span class="w"> </span>sweep_example.toml<span class="w"> </span>-o<span class="w"> </span>sweep_results.csv
+</pre></div>
+</div>
+<p>The results will be saved in the <cite>sweep_results.csv</cite> file.</p>
+</section>
+<section id="python-api">
+<h3>Python API<a class="headerlink" href="#python-api" title="Permalink to this heading"></a></h3>
+<p>Detailed instructions for usage are available in the <a class="reference external" href="https://ameyanagi.github.io/DecomNano/modules.html">API documentation</a>.
+The decomanano package can be imported and used in python scripts.</p>
+</section>
 </section>
 <section id="citation">
 <h2>Citation<a class="headerlink" href="#citation" title="Permalink to this heading"></a></h2>
-<p>If you use DecomNano in your research, please cite the following paper:</p>
+<p>If you use DecomNano in your research, please cite the following paper: to be submitted.</p>
 </section>
 </section>
 
