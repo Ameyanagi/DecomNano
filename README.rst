@@ -9,8 +9,8 @@ DecomNano
 .. image:: https://img.shields.io/travis/Ameyanagi/decomnano.svg
         :target: https://travis-ci.com/Ameyanagi/decomnano
 
-.. image:: https://ameyanagi.github.io/DecomNano/index.html
-        :target: https://github.com/Ameyanagi/DecomNano/actions/workflows/documentation.yaml/badge.svg
+.. image:: https://github.com/Ameyanagi/DecomNano/actions/workflows/documentation.yaml/badge.svg
+        :target: https://ameyanagi.github.io/DecomNano/index.html
         :alt: Documentation Status
 
 DecomNano is a heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.
