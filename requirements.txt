@@ -2,3 +2,4 @@ wolframclient
 pandas
 numpy
 Click
+toml

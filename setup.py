@@ -15,6 +15,7 @@ requirements = [
     "wolframclient",
     "pandas",
     "numpy",
+    "toml",
 ]
 
 test_requirements = [
