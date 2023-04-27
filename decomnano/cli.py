@@ -98,7 +98,7 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
     "-r",
     "--resolution",
     type=float,
-    default=0.1,
+    default=None,
     required=False,
     help="Resolution of sweep.",
 )
@@ -128,6 +128,9 @@ def main(sweep, config, output, interval, kernel, resolution):
         pass
     elif "resolution" in config_dict.keys():
         resolution = config_dict["resolution"]
+    else:
+        resolution = 0.1
+        print("No resolution specified. Using default resolution: 0.1")
 
     if sweep or config_dict["sweep"]:
         run_sweep(
