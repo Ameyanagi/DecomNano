@@ -202,7 +202,7 @@ class SweepDecomNano(object):
             elif type(self.input_config[key]) == float:
                 input_range[key] = np.round(
                     np.arange(
-                        self.input_default[key] - self.input_config[key],
+                        max(0.0, self.input_default[key] - self.input_config[key]),
                         self.input_default[key] + self.input_config[key] + 0.1,
                         resolution,
                     ),
@@ -210,7 +210,7 @@ class SweepDecomNano(object):
                 )
             elif type(self.input_config[key]) == int:
                 input_range[key] = np.arange(
-                    self.input_default[key] - self.input_config[key],
+                    max(0, self.input_default[key] - self.input_config[key]),
                     self.input_default[key] + self.input_config[key] + 1,
                 )
             else:
