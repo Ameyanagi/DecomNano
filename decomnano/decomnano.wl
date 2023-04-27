@@ -37,7 +37,7 @@ DecomNano[dP_, dA_, fA_, nAuAu_, nPtPt_, nAuPt_, nPtAu_, DA_, DAP_, DP_] :=
     eq6 = nAuPt == nAPAP * (XAP / (XA + XAP));
     eq7 = nPtAu == nPAAP * (XAP / (XP + XAP));
     eq8 = (XA + XAP + XP == 1);
-    eq9 = ((XP * NP + XAP * NAP * (1 - y)) == nAuPt / nPtAu *(XA * NA + XAP * NAP * y));
+    eq9 = ((XP * NP + XAP * NAP * (1 - y)) * nPtAu == nAuPt *(XA * NA + XAP * NAP * y));
     eq10 = y == nPAAP / (nPAAP + nAPAP);
     cons1 = 0 <= y <= 1;
     cons2 = 0 <= XAP <= 1;
