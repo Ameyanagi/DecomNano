@@ -42,6 +42,8 @@ Detailed instructions for installation are available in the `installation docume
 Installation from PyPI
 ~~~~~~~~~~~~~~~~~~~~~~
 
+(This method is not available yet. It will be available after the submission.)
+
 .. code-block:: bash
 
     pip install decomnano
