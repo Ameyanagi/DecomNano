@@ -161,3 +161,6 @@ cython_debug/
 
 # tox
 .tox
+
+# Mac OS X
+.DS_Store

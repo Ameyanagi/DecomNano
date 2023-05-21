@@ -3,3 +3,4 @@ pandas
 numpy
 Click
 toml
+ipykernel
