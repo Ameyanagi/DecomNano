@@ -30,11 +30,17 @@ def run_sweep(
     """Run SweepDecomNano with config_dict."""
 
     config_dict = parse_array_in_config(config_dict)
-
+    
+    if config_dict["fix_bulk_fraction"]:
+        fix_bulk_fraction = True
+    else:
+        fix_bulk_fraction = False        
+        
     sd = SweepDecomNano(
         input_default=config_dict["input"],
         input_config=config_dict["input_config"],
         wolfram_kernel=kernel,
+        fix_bulk_fraction=fix_bulk_fraction,
     )
     sd.calc_input_range(resolution=resolution)
     sd.calc_sweep(savepath=output, save_interval=interval)
@@ -44,10 +50,16 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
     """Run DecomNano with config_dict."""
 
     config_dict = parse_array_in_config(config_dict)
+    
+    if config_dict["fix_bulk_fraction"]:
+        fix_bulk_fraction = True
+    else:
+        fix_bulk_fraction = False        
 
     dn = DecomNano(
         input=dict(config_dict["input"]),
         wolfram_kernel=kernel,
+        fix_bulk_fraction=fix_bulk_fraction,
     )
     df = dn.solve_decomnano()
     df.to_csv(output)
