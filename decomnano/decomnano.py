@@ -76,9 +76,12 @@ class DecomNano(object):
         "DecomNano[{dP}, {dA}, {fA}, {nAA}, {nPP}, {nAP}, {nPA}, {DA}, {DAP}, {DP}]"
     )
 
-    def __init__(self, wolfram_kernel=None, input=None):
+    def __init__(self, wolfram_kernel=None, input=None, fix_bulk_fraction=False):
         self.session = WolframLanguageSession(kernel=wolfram_kernel)
-        self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
+        if fix_bulk_fraction:
+            self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl")))
+        else:
+            self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
         self.results = pd.DataFrame()
         self.dict_regex = re.compile(r"Rule\[Global`(.*?), (.*?)]")
 

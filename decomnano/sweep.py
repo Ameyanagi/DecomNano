@@ -91,8 +91,8 @@ class SweepDecomNano(object):
         +-------------------------------------------+------------+-----------------------------------------------------------------------+
     """
 
-    def __init__(self, wolfram_kernel=None, input_default=None, input_config=None):
-        self.dn = DecomNano(wolfram_kernel=wolfram_kernel)
+    def __init__(self, wolfram_kernel=None, input_default=None, input_config=None, fix_bulk_fraction = False):
+        self.dn = DecomNano(wolfram_kernel=wolfram_kernel, fix_bulk_fraction=fix_bulk_fraction)
         self.init_input(input_default=input_default, input_config=input_config)
         self.calc_input_range()
 
