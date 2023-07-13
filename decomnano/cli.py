@@ -35,7 +35,9 @@ def run_sweep(
         fix_bulk_fraction = True
     else:
         fix_bulk_fraction = False        
-        
+    
+    print(fix_bulk_fraction)
+    
     sd = SweepDecomNano(
         input_default=config_dict["input"],
         input_config=config_dict["input_config"],
@@ -55,6 +57,8 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
         fix_bulk_fraction = True
     else:
         fix_bulk_fraction = False        
+
+    print(fix_bulk_fraction)
 
     dn = DecomNano(
         input=dict(config_dict["input"]),
