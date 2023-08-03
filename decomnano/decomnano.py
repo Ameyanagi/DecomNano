@@ -171,6 +171,7 @@ class DecomNano(object):
             DA=0,
             DAP=18,
             DP=5,
+            DAPh=0,
         )
 
         if input is not None:
