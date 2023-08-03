@@ -1,6 +1,7 @@
 from decomnano import DecomNano
 import numpy as np
 import itertools
+import tqdm
 
 
 class SweepDecomNano(object):
@@ -91,8 +92,20 @@ class SweepDecomNano(object):
         +-------------------------------------------+------------+-----------------------------------------------------------------------+
     """
 
-    def __init__(self, wolfram_kernel=None, input_default=None, input_config=None, fix_bulk_fraction = False):
-        self.dn = DecomNano(wolfram_kernel=wolfram_kernel, fix_bulk_fraction=fix_bulk_fraction)
+    def __init__(
+        self,
+        wolfram_kernel=None,
+        input_default=None,
+        input_config=None,
+        fix_bulk_fraction=False,
+        respawn_interval=10000,
+    ):
+        self.respawn_interval = respawn_interval
+        self.fix_bulk_fraction = fix_bulk_fraction
+
+        self.dn = DecomNano(
+            wolfram_kernel=wolfram_kernel, fix_bulk_fraction=fix_bulk_fraction
+        )
         self.init_input(input_default=input_default, input_config=input_config)
         self.calc_input_range()
 
@@ -240,15 +253,18 @@ class SweepDecomNano(object):
         input_iteration = itertools.product(*input_range_list)
 
         num = 0
-        for input in input_iteration:
+        for input in tqdm(input_iteration):
             self.update_input_from_list(input, labels)
             self.dn.calc_decomnano(**self.input)
 
-            num = num % save_interval
+            # num = num % save_interval
 
-            if num == 0:
+            if num % save_interval == 0:
                 self.dn.print_input()
                 self.dn.save_results(savepath)
+
+            if num % self.respawn_interval == 0:
+                self.dn.respawn_kernel()
 
             num = num + 1
 
@@ -287,18 +303,21 @@ class SweepDecomNano(object):
         input_iteration = itertools.product(*input_range_list)
 
         num = 0
-        for input in input_iteration:
+        for input in tqdm(input_iteration):
             self.update_input_from_list(input, labels)
 
             # update input to constrain parameters[1] to be the same as parameters[0]
             self.update_input({parameters[1]: input[index_param0]})
             self.dn.calc_decomnano(**self.input)
 
-            num = num % save_interval
+            # num = num % save_interval
 
-            if num == 0:
+            if num % save_interval == 0:
                 self.dn.print_input()
                 self.dn.save_results(savepath)
+
+            if num % self.respawn_interval == 0:
+                self.dn.respawn_kernel()
 
             num = num + 1
 

@@ -4,3 +4,4 @@ numpy
 Click
 toml
 ipykernel
+tqdm

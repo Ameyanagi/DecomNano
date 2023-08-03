@@ -78,8 +78,11 @@ class DecomNano(object):
 
     def __init__(self, wolfram_kernel=None, input=None, fix_bulk_fraction=False):
         self.session = WolframLanguageSession(kernel=wolfram_kernel)
+        self.fix_bulk_fraction = fix_bulk_fraction
         if fix_bulk_fraction:
-            self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl")))
+            self.session.evaluate(
+                wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
+            )
         else:
             self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
         self.results = pd.DataFrame()
@@ -123,6 +126,18 @@ class DecomNano(object):
 
         if input is not None:
             self.input.update(input)
+
+    def respawn_kernel(self):
+        if self.session is not None:
+            self.session.terminate()
+
+        self.session = WolframLanguageSession(kernel=wolfram_kernel)
+        if self.fix_bulk_fraction:
+            self.session.evaluate(
+                wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
+            )
+        else:
+            self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
 
     def init_input(self, **kwargs):
         """Initialize the input dictionary of DecomNano class.

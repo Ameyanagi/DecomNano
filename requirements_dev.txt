@@ -16,3 +16,4 @@ wolframclient
 pandas
 numpy
 toml
+tqdm

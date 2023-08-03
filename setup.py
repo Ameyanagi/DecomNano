@@ -16,6 +16,7 @@ requirements = [
     "pandas",
     "numpy",
     "toml",
+    "tqdm",
 ]
 
 test_requirements = [
