@@ -1,7 +1,7 @@
 from decomnano import DecomNano
 import numpy as np
 import itertools
-import tqdm
+from tqdm import tqdm
 
 
 class SweepDecomNano(object):
