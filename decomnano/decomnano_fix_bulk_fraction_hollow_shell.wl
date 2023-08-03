@@ -84,7 +84,7 @@ DecomNanoh[dP_, dA_, fA_, nAuAu_, nPtPt_, nAuPt_, nPtAu_, DA_, DAP_, DP_, DAPh_]
     (* This the prameters from experiment. It has some uncertancies.*)
         
     (* Number of bonds in AuPtNP*)
-    nMMAP = nh[DAP, dAP, DAPh];
+    nMMAP = nh[DAP, DAPh, dAP];
     nAAA = n[DA, dA];
     nPPP = n[DP, dP];
     (*Number of atoms of Au nanoparticle*)
@@ -92,7 +92,7 @@ DecomNanoh[dP_, dA_, fA_, nAuAu_, nPtPt_, nAuPt_, nPtAu_, DA_, DAP_, DP_, DAPh_]
     (*Number of atoms of Pt nanoparticle*)
     NP = Natom[DP, dP];
     (*Number of atoms of AuPt nanoparticle*)
-    NAP = Natomh[DAP, dAP, DAPh];
+    NAP = Natomh[DAP, DAPh, dAP];
     eq1 = nMMAP == y * nAMAP + (1 - y) * nPMAP;
     eq2 = nAMAP == nAAAP + nAPAP;
     eq3 = nPMAP == nPAAP + nPPAP;
