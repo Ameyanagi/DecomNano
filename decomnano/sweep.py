@@ -99,12 +99,16 @@ class SweepDecomNano(object):
         input_config=None,
         fix_bulk_fraction=False,
         respawn_interval=10000,
+        hollow_shell=False,
     ):
         self.respawn_interval = respawn_interval
         self.fix_bulk_fraction = fix_bulk_fraction
+        self.hollow_shell = hollow_shell
 
         self.dn = DecomNano(
-            wolfram_kernel=wolfram_kernel, fix_bulk_fraction=fix_bulk_fraction
+            wolfram_kernel=wolfram_kernel,
+            fix_bulk_fraction=fix_bulk_fraction,
+            hollow_shell=hollow_shell,
         )
         self.init_input(input_default=input_default, input_config=input_config)
         self.calc_input_range()

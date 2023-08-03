@@ -76,10 +76,19 @@ class DecomNano(object):
         "DecomNano[{dP}, {dA}, {fA}, {nAA}, {nPP}, {nAP}, {nPA}, {DA}, {DAP}, {DP}]"
     )
 
-    def __init__(self, wolfram_kernel=None, input=None, fix_bulk_fraction=False):
+    decomnano_equation_hollow = "DecomNanoh[{dP}, {dA}, {fA}, {nAA}, {nPP}, {nAP}, {nPA}, {DA}, {DAP}, {DP}, {DAPh}]"
+
+    def __init__(
+        self,
+        wolfram_kernel=None,
+        input=None,
+        fix_bulk_fraction=False,
+        hollow_shell=False,
+    ):
         self.wolfram_kernel = wolfram_kernel
         self.session = WolframLanguageSession(kernel=self.wolfram_kernel)
         self.fix_bulk_fraction = fix_bulk_fraction
+        self.hollow_shell = hollow_shell
         if fix_bulk_fraction:
             self.session.evaluate(
                 wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
@@ -100,6 +109,7 @@ class DecomNano(object):
             "DA",
             "DAP",
             "DP",
+            "DAPh",
             "nAM_AP",
             "nPM_AP",
             "nAA_AP",
@@ -161,6 +171,7 @@ class DecomNano(object):
             DA=0,
             DAP=18,
             DP=5,
+            DAPh=0,
         )
 
         self.input.update(kwargs)
@@ -188,9 +199,14 @@ class DecomNano(object):
     def solve_decomnano(self):
         """Solves the heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis."""
 
-        result = self.session.evaluate(
-            wlexpr(self.decomnano_equation.format(**self.input))
-        )
+        if self.hollow_shell:
+            result = self.session.evaluate(
+                wlexpr(self.decomnano_equation_hollow.format(**self.input))
+            )
+        else:
+            result = self.session.evaluate(
+                wlexpr(self.decomnano_equation.format(**self.input))
+            )
 
         df = pd.DataFrame(result, columns=self.column)
         self.results = pd.concat([self.results, df])
