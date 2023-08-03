@@ -256,6 +256,8 @@ class DecomNano(object):
                 wlexpr(self.decomnano_equation.format(**self.input))
             )
 
+        print(result)
+
         df = pd.DataFrame(result, columns=self.column)
         self.results = pd.concat([self.results, df])
 
