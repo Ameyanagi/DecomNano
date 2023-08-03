@@ -126,6 +126,7 @@ class SweepDecomNano(object):
             DA=0,
             DAP=18,
             DP=5,
+            DAPh=0,
         )
 
         self.input_default = dict(
@@ -139,6 +140,7 @@ class SweepDecomNano(object):
             DA=10,
             DAP=18,
             DP=18,
+            DAPh=0,
         )
 
         if input_default is not None:

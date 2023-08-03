@@ -31,6 +31,9 @@ def run_sweep(
 
     config_dict = parse_array_in_config(config_dict)
 
+    if "hollow_shell" not in config_dict:
+        config_dict["hollow_shell"] = False
+
     if "fix_bulk_fraction" not in config_dict:
         config_dict["fix_bulk_fraction"] = False
 
@@ -39,11 +42,17 @@ def run_sweep(
     else:
         fix_bulk_fraction = False
 
+    if config_dict["hollow_shell"]:
+        hollow_shell = True
+    else:
+        hollow_shell = False
+
     sd = SweepDecomNano(
         input_default=config_dict["input"],
         input_config=config_dict["input_config"],
         wolfram_kernel=kernel,
         fix_bulk_fraction=fix_bulk_fraction,
+        hollow_shell=hollow_shell,
     )
     sd.calc_input_range(resolution=resolution)
     sd.calc_sweep(savepath=output, save_interval=interval)
@@ -62,10 +71,19 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
     else:
         fix_bulk_fraction = False
 
+    if "hollow_shell" not in config_dict:
+        config_dict["hollow_shell"] = False
+
+    if config_dict["hollow_shell"]:
+        hollow_shell = True
+    else:
+        hollow_shell = False
+
     dn = DecomNano(
         input=dict(config_dict["input"]),
         wolfram_kernel=kernel,
         fix_bulk_fraction=fix_bulk_fraction,
+        hollow_shell=hollow_shell,
     )
     df = dn.solve_decomnano()
     df.to_csv(output)
