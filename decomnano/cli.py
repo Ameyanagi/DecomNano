@@ -30,12 +30,15 @@ def run_sweep(
     """Run SweepDecomNano with config_dict."""
 
     config_dict = parse_array_in_config(config_dict)
-    
+
+    if "fix_bulk_fraction" not in config_dict:
+        config_dict["fix_bulk_fraction"] = False
+
     if config_dict["fix_bulk_fraction"]:
         fix_bulk_fraction = True
     else:
-        fix_bulk_fraction = False        
-        
+        fix_bulk_fraction = False
+
     sd = SweepDecomNano(
         input_default=config_dict["input"],
         input_config=config_dict["input_config"],
@@ -50,11 +53,14 @@ def run_decomnano(config_dict=None, output="result.csv", kernel=None):
     """Run DecomNano with config_dict."""
 
     config_dict = parse_array_in_config(config_dict)
-    
+
+    if "fix_bulk_fraction" not in config_dict:
+        config_dict["fix_bulk_fraction"] = False
+
     if config_dict["fix_bulk_fraction"]:
         fix_bulk_fraction = True
     else:
-        fix_bulk_fraction = False        
+        fix_bulk_fraction = False
 
     dn = DecomNano(
         input=dict(config_dict["input"]),
