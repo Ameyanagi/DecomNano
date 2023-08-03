@@ -8,7 +8,7 @@ kernel = "/opt/Wolfram/Mathematica/12.3/bin/WolframKernel"
 
 # Fixing the bulk fraction will allow fixing the bulk fraction to specific value. This would be useful whe you want to fix it to values obtained by ICP-MS instead of calculating from the cooridination numbers obtained by the NN-XANES.
 # This will reduce an error due to relatively high errors due to the cooridination numbers.
-fix_bulk_fraction = true
+fix_bulk_fraction = false
 
 hollow_shell = true
 

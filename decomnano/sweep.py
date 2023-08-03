@@ -261,7 +261,9 @@ class SweepDecomNano(object):
         num = 0
         for input in tqdm(input_iteration):
             self.update_input_from_list(input, labels)
-            self.dn.calc_decomnano(**self.input)
+
+            if self.input["DAP"] > self.input["DAPh"]:
+                self.dn.calc_decomnano(**self.input)
 
             # num = num % save_interval
 

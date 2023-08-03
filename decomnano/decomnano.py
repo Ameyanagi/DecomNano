@@ -151,7 +151,12 @@ class DecomNano(object):
                     wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
                 )
         else:
-            self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
+            if self.hollow_shell:
+                self.session.evaluate(
+                    wl.Get(os.path.join(current_dir, "decomnano_hollow_shell.wl"))
+                )
+            else:
+                self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
         self.results = pd.DataFrame()
         self.dict_regex = re.compile(r"Rule\[Global`(.*?), (.*?)]")
 
@@ -197,7 +202,12 @@ class DecomNano(object):
                     wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
                 )
         else:
-            self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
+            if self.hollow_shell:
+                self.session.evaluate(
+                    wl.Get(os.path.join(current_dir, "decomnano_hollow_shell.wl"))
+                )
+            else:
+                self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
 
     def init_input(self, **kwargs):
         """Initialize the input dictionary of DecomNano class.
