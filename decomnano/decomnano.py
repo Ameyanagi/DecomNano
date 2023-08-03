@@ -77,7 +77,8 @@ class DecomNano(object):
     )
 
     def __init__(self, wolfram_kernel=None, input=None, fix_bulk_fraction=False):
-        self.session = WolframLanguageSession(kernel=wolfram_kernel)
+        self.wolfram_kernel = wolfram_kernel
+        self.session = WolframLanguageSession(kernel=self.wolfram_kernel)
         self.fix_bulk_fraction = fix_bulk_fraction
         if fix_bulk_fraction:
             self.session.evaluate(
@@ -131,7 +132,7 @@ class DecomNano(object):
         if self.session is not None:
             self.session.terminate()
 
-        self.session = WolframLanguageSession(kernel=wolfram_kernel)
+        self.session = WolframLanguageSession(kernel=self.wolfram_kernel)
         if self.fix_bulk_fraction:
             self.session.evaluate(
                 wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
