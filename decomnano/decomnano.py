@@ -136,10 +136,20 @@ class DecomNano(object):
         self.session = WolframLanguageSession(kernel=self.wolfram_kernel)
         self.fix_bulk_fraction = fix_bulk_fraction
         self.hollow_shell = hollow_shell
-        if fix_bulk_fraction:
-            self.session.evaluate(
-                wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
-            )
+
+        if self.fix_bulk_fraction:
+            if self.hollow_shell:
+                self.session.evaluate(
+                    wl.Get(
+                        os.path.join(
+                            current_dir, "decomnano_fix_bulk_fraction_hollow_shell.wl"
+                        )
+                    )
+                )
+            else:
+                self.session.evaluate(
+                    wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
+                )
         else:
             self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
         self.results = pd.DataFrame()
@@ -171,10 +181,20 @@ class DecomNano(object):
             self.session.terminate()
 
         self.session = WolframLanguageSession(kernel=self.wolfram_kernel)
+
         if self.fix_bulk_fraction:
-            self.session.evaluate(
-                wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
-            )
+            if self.hollow_shell:
+                self.session.evaluate(
+                    wl.Get(
+                        os.path.join(
+                            current_dir, "decomnano_fix_bulk_fraction_hollow_shell.wl"
+                        )
+                    )
+                )
+            else:
+                self.session.evaluate(
+                    wl.Get(os.path.join(current_dir, "decomnano_fix_bulk_fraction.wl"))
+                )
         else:
             self.session.evaluate(wl.Get(os.path.join(current_dir, "decomnano.wl")))
 
