@@ -78,6 +78,53 @@ class DecomNano(object):
 
     decomnano_equation_hollow = "DecomNanoh[{dP}, {dA}, {fA}, {nAA}, {nPP}, {nAP}, {nPA}, {DA}, {DAP}, {DP}, {DAPh}]"
 
+    column = [
+        "dP",
+        "dA",
+        "fA",
+        "nAA",
+        "nPP",
+        "nAP",
+        "nPA",
+        "DA",
+        "DAP",
+        "DP",
+        "nAM_AP",
+        "nPM_AP",
+        "nAA_AP",
+        "nAP_AP",
+        "nPA_AP",
+        "nPP_AP",
+        "XAP",
+        "XA",
+        "XP",
+        "y",
+    ]
+
+    column_hollow = [
+        "dP",
+        "dA",
+        "fA",
+        "nAA",
+        "nPP",
+        "nAP",
+        "nPA",
+        "DA",
+        "DAP",
+        "DP",
+        "DAPh",
+        "nAM_AP",
+        "nPM_AP",
+        "nAA_AP",
+        "nAP_AP",
+        "nPA_AP",
+        "nPP_AP",
+        "XAP",
+        "XA",
+        "XP",
+        "y",
+    ]
+
     def __init__(
         self,
         wolfram_kernel=None,
@@ -98,29 +145,10 @@ class DecomNano(object):
         self.results = pd.DataFrame()
         self.dict_regex = re.compile(r"Rule\[Global`(.*?), (.*?)]")
 
-        self.column = [
-            "dP",
-            "dA",
-            "fA",
-            "nAA",
-            "nPP",
-            "nAP",
-            "nPA",
-            "DA",
-            "DAP",
-            "DP",
-            "DAPh",
-            "nAM_AP",
-            "nPM_AP",
-            "nAA_AP",
-            "nAP_AP",
-            "nPA_AP",
-            "nPP_AP",
-            "XAP",
-            "XA",
-            "XP",
-            "y",
-        ]
+        if self.hollow_shell:
+            self.column = self.column_hollow
+        else:
+            self.column = self.column
 
         self.input = dict(
             dP=2.77,

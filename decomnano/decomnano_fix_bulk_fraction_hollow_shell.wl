@@ -121,6 +121,6 @@ DecomNanoh[dP_, dA_, fA_, nAuAu_, nPtPt_, nAuPt_, nPtAu_, DA_, DAP_, DP_, DAPh_]
          nPMAP, nAAAP, nAPAP, nPAAP, nPPAP, XAP, XA, XP, y
         }, Reals];
         
-   If[Length[sol]>0,{dP, dA, fA, nAuAu, nPtPt, nAuPt, nPtAu, DA, DAP, DP, nAMAP,
-         nPMAP, nAAAP, nAPAP, nPAAP, nPPAP, XAP, XA, XP, y}/.sol, {{dP, dA, fA, nAuAu, nPtPt, nAuPt, nPtAu, DA, DAP, DP,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null}}]
+   If[Length[sol]>0,{dP, dA, fA, nAuAu, nPtPt, nAuPt, nPtAu, DA, DAP, DP, DAPh, nAMAP,
+         nPMAP, nAAAP, nAPAP, nPAAP, nPPAP, XAP, XA, XP, y}/.sol, {{dP, dA, fA, nAuAu, nPtPt, nAuPt, nPtAu, DA, DAP, DP, DAPh, Null,Null,Null,Null,Null,Null,Null,Null,Null,Null}}]
 ]
