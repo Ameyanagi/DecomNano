@@ -1,15 +1,18 @@
 (* ::Package:: *)
 
 L = Compile[{{D,_Real}, {d, _Real}}, Module[{}, D/2/d]]
-n = Compile[{{D,_Real}, {d, _Real}}, Module[{}, 6 * L[D, d] * (20 * L[D, d] ^ 2 + 15 * L[D, d] + 7) 
-        / (10 * L[D, d] ^ 3 + 15 * L[D, d] ^ 2 + 11 * L[D, d] + 3)]]
+n = Compile[{{D, _Real}, {d, _Real}}, 
+  Module[{}, 
+   24*L[D, 
+     d]*(5*L[D, d]^2 + 3*L[D, d] + 1)/(10*L[D, d]^3 + 15*L[D, d]^2 + 
+       11*L[D, d] + 3)]]
 Natom = Compile[{{D,_Real}, {d, _Real}}, Module[{}, (10 * L[D, d] ^ 3 + 15 * L[D, d] ^ 2 + 11 * L[D,
          d] + 3) / 3]]
 
 nh = Compile[{{D, _Real}, {Dh, _Real}, {d, _Real}}, 
   Module[{}, 
-   24*(L[D, d]*(5*L[D, d]^2 + 3*L[D, d] + 1) - (15*L[Dh, d]^3 + 
-         18*L[Dh, d]^2 + 12*L[Dh, d] + 3))/(10*L[D, d]^3 + 
+   24*(L[D, d]*(5*L[D, d]^2 + 3*L[D, d] + 1) - (5*L[Dh, d]^3 + 
+         12*L[Dh, d]^2 + 10*L[Dh, d] + 3))/(10*L[D, d]^3 + 
        15*L[D, d]^2 + 11*L[D, d] - 10*L[Dh, d]^3 + 15*L[Dh, d]^2 + 
        11*L[Dh, d])]]
 
