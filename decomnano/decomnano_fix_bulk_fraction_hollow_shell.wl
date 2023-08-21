@@ -13,8 +13,7 @@ nh = Compile[{{D, _Real}, {Dh, _Real}, {d, _Real}},
   Module[{}, 
    24*(L[D, d]*(5*L[D, d]^2 + 3*L[D, d] + 1) - (5*L[Dh, d]^3 + 
          12*L[Dh, d]^2 + 10*L[Dh, d] + 3))/(10*L[D, d]^3 + 
-       15*L[D, d]^2 + 11*L[D, d] - 10*L[Dh, d]^3 - 15*L[Dh, d]^2 + 
-       11*L[Dh, d])]]
+       15*L[D, d]^2 + 11*L[D, d] - 10*L[Dh, d]^3 - 15*L[Dh, d]^2 - 11*L[Dh, d])]]
 
 Natomh = 
  Compile[{{D, _Real}, {Dh, _Real}, {d, _Real}}, 
