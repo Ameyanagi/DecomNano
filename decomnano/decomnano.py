@@ -283,6 +283,10 @@ class DecomNano(object):
             return False
 
         input_df = pd.Series(self.input)
+
+        if not self.hollow_shell:
+            input_df = input_df.drop("DAPh")
+
         input_columns = input_df.index
 
         df = self.results[input_columns] == input_df
