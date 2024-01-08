@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>decomnano.sweep &mdash; DecomNano 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DecomNano
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">DecomNano</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">decomnano</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DecomNano</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">decomnano.sweep</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for decomnano.sweep</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">decomnano</span> <span class="kn">import</span> <span class="n">DecomNano</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+
+<div class="viewcode-block" id="SweepDecomNano">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano">[docs]</a>
+<span class="k">class</span> <span class="nc">SweepDecomNano</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;SweepDecomNano class for calculating decomnano with various input parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wolfam_kernel (str): Path to the Wolfram kernel. Defaults to None, which uses the default kernel.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        dn (DecomNano): DecomNano class for calculating decomnano.</span>
+<span class="sd">        input (dict): Current input parameters used for calculating DecomNano solver.</span>
+<span class="sd">        input_default (dict): Default input parameters used for calculating DecomNano solver. input will be generated by updating input_default with input_config.</span>
+<span class="sd">        input_config (dict): Configuration of input range parameters used for calculating DecomNano solver. input_default will be generated by updating input_default with range specified in input_config. The range of input parameters can be specified by list or numpy array. If the range is specified by list or numpy array, the input parameters varies from the minimum value to the maximum value with the step size of the difference between the maximum value and the minimum value divided by the number of elements in the list or numpy array minus 1. If the range is specified by a single value, the input parameters will be varied from range(input_default-value, input_default+value, resolution). The resolution is set to 0.1 by default.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from decomnano import SweepDecomNano</span>
+<span class="sd">        &gt;&gt;&gt; sd = SweepDecomNano()</span>
+<span class="sd">        &gt;&gt;&gt; sd.calc_sweep(&quot;sweep_results&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; Pt40Au60BP1_input_default = dict(</span>
+<span class="sd">                RPt = 2.77,</span>
+<span class="sd">                RAu = 2.88,</span>
+<span class="sd">                fAu = 0.6,</span>
+<span class="sd">                nAuAu = 4.2,</span>
+<span class="sd">                nPtPt = 10.0,</span>
+<span class="sd">                nAuPt = 2.8,</span>
+<span class="sd">                nPtAu = 0.71,</span>
+<span class="sd">                DA = 10,</span>
+<span class="sd">                DAP = 17,</span>
+<span class="sd">                DP = 17,</span>
+<span class="sd">            )</span>
+<span class="sd">        &gt;&gt;&gt; Pt40Au60BP1_input_config = dict(</span>
+<span class="sd">                nAuAu = 0.6,</span>
+<span class="sd">                nPtPt = 0.7,</span>
+<span class="sd">                nAuPt = 0.5,</span>
+<span class="sd">                nPtAu = 0.8,</span>
+<span class="sd">                DP = list(range(0, 18, 2)),</span>
+<span class="sd">                DA = list(range(0, 18, 2))</span>
+<span class="sd">                )</span>
+<span class="sd">        &gt;&gt;&gt; sd.update_input_default(Pt40Ag60BP1_input_default)</span>
+<span class="sd">        &gt;&gt;&gt; sd.update_input_config(Pt40Ag60BP1_input_config)</span>
+<span class="sd">        &gt;&gt;&gt; sd.calc_sweep(&quot;sweep_results.csv&quot;)</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The variables in the input dictionary different from the paper due to the naming rules of python. Following table shows the correspondence between the variables in the paper and the input dictionary.</span>
+
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        | Notation in paper                         | Keys       | Descriptions                                                          |</span>
+<span class="sd">        +===========================================+============+=======================================================================+</span>
+<span class="sd">        |:math:`d_P`                                | dP         | Interatomic spacing of Pt nanoparticles                               |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`d_A`                                | dA         | Interatomic spacing of Au nanoparticles                               |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`\frac{M_A}{M_A + M_P}`              | fA         | Molar fraction of Au                                                  |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-A}`                            | nAA        | Total first nearest neighbor coordination number of Au-Au bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-P}`                            | nPP        | Total first nearest neighbor coordination number of Pt-Pt bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-P}`                            | nAP        | Total first nearest neighbor coordination number of Au-Pt bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-A}`                            | nPA        | Total first nearest neighbor coordination number of Pt-Au bonds.      |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`D_A`                                | DA         | Diameter of Au nanoparticles                                          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`D_{AP}`                             | DAP        | Diameter of PtAu nanoparticles                                        |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`D_P`                                | DP         | Diameter of Pt nanoparticles                                          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-M,AP}`                         | nAM_AP     | First nearest neighbor coordination number of Au-metal bonds          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-M,AP}`                         | nPM_AP     | First nearest neighbor coordination number of Pt-metal bonds          |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-A,AP}`                         | nAA_AP     | First nearest neighbor coordination number of Au-Au bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{A-P,AP}`                         | nAP_AP     | First nearest neighbor coordination number of Au-Pt bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-A,AP}`                         | nPA_AP     | First nearest neighbor coordination number of Pt-Au bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`n_{P-P,AP}`                         | nPP_AP     | First nearest neighbor coordination number of Pt-Pt bonds             |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`X_A`                                | XA         | Molar ratio of Au nanoparticles                                       |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`X_{AP}`                             | XAP        | Molar ratio of PtAu nanoparticles                                     |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`X_P`                                | XP         | Molar ratio of Pt nanoparticles                                       |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">        |:math:`y`                                  | y          | Molar fraction of Au in PtAu nanoparticles                            |</span>
+<span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">wolfram_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fix_bulk_fraction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">respawn_interval</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">hollow_shell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">respawn_interval</span> <span class="o">=</span> <span class="n">respawn_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_bulk_fraction</span> <span class="o">=</span> <span class="n">fix_bulk_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span> <span class="o">=</span> <span class="n">hollow_shell</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="n">DecomNano</span><span class="p">(</span>
+            <span class="n">wolfram_kernel</span><span class="o">=</span><span class="n">wolfram_kernel</span><span class="p">,</span>
+            <span class="n">fix_bulk_fraction</span><span class="o">=</span><span class="n">fix_bulk_fraction</span><span class="p">,</span>
+            <span class="n">hollow_shell</span><span class="o">=</span><span class="n">hollow_shell</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_input</span><span class="p">(</span><span class="n">input_default</span><span class="o">=</span><span class="n">input_default</span><span class="p">,</span> <span class="n">input_config</span><span class="o">=</span><span class="n">input_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_input_range</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SweepDecomNano.init_input">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.init_input">[docs]</a>
+    <span class="k">def</span> <span class="nf">init_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize input parameters for calculating DecomNano solver. Called in __init__().&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">dP</span><span class="o">=</span><span class="mf">2.77</span><span class="p">,</span>
+            <span class="n">dA</span><span class="o">=</span><span class="mf">2.88</span><span class="p">,</span>
+            <span class="n">fA</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+            <span class="n">nAA</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span>
+            <span class="n">nPP</span><span class="o">=</span><span class="mf">9.9</span><span class="p">,</span>
+            <span class="n">nAP</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+            <span class="n">nPA</span><span class="o">=</span><span class="mf">1.13</span><span class="p">,</span>
+            <span class="n">DA</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+            <span class="n">DP</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">DAPh</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">dP</span><span class="o">=</span><span class="mf">2.77</span><span class="p">,</span>
+            <span class="n">dA</span><span class="o">=</span><span class="mf">2.88</span><span class="p">,</span>
+            <span class="n">fA</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+            <span class="n">nAA</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span>
+            <span class="n">nPP</span><span class="o">=</span><span class="mf">9.9</span><span class="p">,</span>
+            <span class="n">nAP</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+            <span class="n">nPA</span><span class="o">=</span><span class="mf">1.13</span><span class="p">,</span>
+            <span class="n">DA</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+            <span class="n">DP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+            <span class="n">DAPh</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">input_default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">input_default</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">input_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">nAA</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                <span class="n">nPP</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                <span class="n">nAP</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                <span class="n">nPA</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                <span class="n">DA</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span> <span class="o">=</span> <span class="n">input_config</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.update_input_default">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.update_input_default">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_input_default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_default</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update input_default and calculate input_range. Copies input_default to self.input_default and calculates input_range.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_default (dict): Dictionary to replace input_default.</span>
+<span class="sd">            resolution (float): Resolution of input_range. Defaults to 0.1. input_default will be generated by updating input_default with range specified in input_config. The range of input parameters can be specified by list or numpy array. If the range is specified by list or numpy array, the input parameters varies from the minimum value to the maximum value with the step size of the difference between the maximum value and the minimum value divided by the number of elements in the list or numpy array minus 1. If the range is specified by a single value, the input parameters will be varied from range(input_default-value, input_default+value, resolution). The resolution is set to 0.1 by default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span> <span class="o">=</span> <span class="n">input_default</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_input_range</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.update_input_config">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.update_input_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_input_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_config</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update input_config and calculate input_range. Copies input_config to self.input_config and calculates input_range.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_config (dict): Dictionary to replace input_config.</span>
+<span class="sd">            resolution (float): Resolution of input_range. Defaults to 0.1. input_default will be generated by updating input_default with range specified in input_config. The range of input parameters can be specified by list or numpy array. If the range is specified by list or numpy array, the input parameters varies from the minimum value to the maximum value with the step size of the difference between the maximum value and the minimum value divided by the number of elements in the list or numpy array minus 1. If the range is specified by a single value, the input parameters will be varied from range(input_default-value, input_default+value, resolution). The resolution is set to 0.1 by default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span> <span class="o">=</span> <span class="n">input_config</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_input_range</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.update_input_from_list">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.update_input_from_list">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_input_from_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_list</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update input from list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_list (list): List of input parameters.</span>
+<span class="sd">            label (list): List of labels for input parameters. Defaults to None. If label is None, the order of input parameters should be the same as the order of input parameters in self.input. If label is not None, the order of input parameters should be the same as the order of labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input_list</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="n">label</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">input_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">input_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.update_input">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.update_input">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update input from dictionary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_dict (dict): Dictionary of input parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">input_dict</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.calc_input_range">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.calc_input_range">[docs]</a>
+    <span class="k">def</span> <span class="nf">calc_input_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate input_range from input_default and input_config.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resolution (float): Resolution of input_range. Defaults to 0.1. input_default will be generated by updating input_default with range specified in input_config. The range of input parameters can be specified by list or numpy array. If the range is specified by list or numpy array, the input parameters varies from the minimum value to the maximum value with the step size of the difference between the maximum value and the minimum value divided by the number of elements in the list or numpy array minus 1. If the range is specified by a single value, the input parameters will be varied from range(input_default-value, input_default+value, resolution). The resolution is set to 0.1 by default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">input_range</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">:</span>
+            <span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]])</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+                <span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+                <span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                        <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span>
+                        <span class="n">resolution</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">decimals</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_range</span> <span class="o">=</span> <span class="n">input_range</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.print_input_range">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.print_input_range">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_input_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print input_range.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_range</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.calc_sweep">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.calc_sweep">[docs]</a>
+    <span class="k">def</span> <span class="nf">calc_sweep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">savepath</span><span class="o">=</span><span class="s2">&quot;result.csv&quot;</span><span class="p">,</span> <span class="n">save_interval</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate DecomNano solver with sweep of input parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            savepath (str): Path to save results. Defaults to &quot;result.csv&quot;.</span>
+<span class="sd">            save_interval (int): Interval of saving results. The results will be saved after each save_interval. Defaults to 100.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_range</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">input_range_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="n">input_range_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="n">input_iteration</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">input_range_list</span><span class="p">)</span>
+
+        <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">input_iteration</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_input_from_list</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="s2">&quot;DAP&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="s2">&quot;DAPh&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">calc_decomnano</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+
+            <span class="c1"># num = num % save_interval</span>
+
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="n">save_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">print_input</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">savepath</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">respawn_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">respawn_kernel</span><span class="p">()</span>
+
+            <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">print_input</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">savepath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.calc_sweep_const_2param">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.calc_sweep_const_2param">[docs]</a>
+    <span class="k">def</span> <span class="nf">calc_sweep_const_2param</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DA&quot;</span><span class="p">,</span> <span class="s2">&quot;DP&quot;</span><span class="p">],</span> <span class="n">savepath</span><span class="o">=</span><span class="s2">&quot;result.csv&quot;</span><span class="p">,</span> <span class="n">save_interval</span><span class="o">=</span><span class="mi">100</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate DecomNano solver with sweep of input parameters with constraining two parameters to be the same.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parameters (list): List of two parameters to be constrained to be the same. Defaults to [&quot;DA&quot;, &quot;DP&quot;]. Input config of the first parameter will be applied to the second parameter.</span>
+<span class="sd">            savepath (str): Path to save results. Defaults to &quot;result.csv&quot;.</span>
+<span class="sd">            save_interval (int): Interval of saving results. The results will be saved after each save_interval. Defaults to 100.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; # To constrain DA = DP, run</span>
+<span class="sd">            &gt;&gt;&gt; sd.calc_sweep_const_2param([&quot;DA&quot;, &quot;DP&quot;], savepath, save_interval=100)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;parameters should be a list of two strings&quot;</span><span class="p">)</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_range</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="c1"># remove parameter[1] from labels</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">index_param0</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">input_range_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="n">input_range_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="n">input_iteration</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">input_range_list</span><span class="p">)</span>
+
+        <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">input_iteration</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_input_from_list</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+            <span class="c1"># update input to constrain parameters[1] to be the same as parameters[0]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_input</span><span class="p">({</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nb">input</span><span class="p">[</span><span class="n">index_param0</span><span class="p">]})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">calc_decomnano</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+
+            <span class="c1"># num = num % save_interval</span>
+
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="n">save_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">print_input</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">savepath</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">respawn_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">respawn_kernel</span><span class="p">()</span>
+
+            <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">print_input</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">savepath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SweepDecomNano.terminate">
+<a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano.terminate">[docs]</a>
+    <span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Terminate DecomNano solver.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Terminate DecomNano solver.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ryuichi Shimogawa.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
