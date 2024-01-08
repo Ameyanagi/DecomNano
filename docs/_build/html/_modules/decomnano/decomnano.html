@@ -156,34 +156,94 @@
         <span class="s2">&quot;DecomNano[</span><span class="si">{dP}</span><span class="s2">, </span><span class="si">{dA}</span><span class="s2">, </span><span class="si">{fA}</span><span class="s2">, </span><span class="si">{nAA}</span><span class="s2">, </span><span class="si">{nPP}</span><span class="s2">, </span><span class="si">{nAP}</span><span class="s2">, </span><span class="si">{nPA}</span><span class="s2">, </span><span class="si">{DA}</span><span class="s2">, </span><span class="si">{DAP}</span><span class="s2">, </span><span class="si">{DP}</span><span class="s2">]&quot;</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wolfram_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">WolframLanguageSession</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">wolfram_kernel</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;DecomNano.wl&quot;</span><span class="p">)))</span>
+    <span class="n">decomnano_equation_hollow</span> <span class="o">=</span> <span class="s2">&quot;DecomNanoh[</span><span class="si">{dP}</span><span class="s2">, </span><span class="si">{dA}</span><span class="s2">, </span><span class="si">{fA}</span><span class="s2">, </span><span class="si">{nAA}</span><span class="s2">, </span><span class="si">{nPP}</span><span class="s2">, </span><span class="si">{nAP}</span><span class="s2">, </span><span class="si">{nPA}</span><span class="s2">, </span><span class="si">{DA}</span><span class="s2">, </span><span class="si">{DAP}</span><span class="s2">, </span><span class="si">{DP}</span><span class="s2">, </span><span class="si">{DAPh}</span><span class="s2">]&quot;</span>
+
+    <span class="n">column</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;dP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DAP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAM_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPM_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAA_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAP_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPA_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPP_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;XAP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;XA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;XP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">column_hollow</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;dP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DAP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DAPh&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAM_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPM_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAA_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nAP_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPA_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nPP_AP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;XAP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;XA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;XP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">wolfram_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fix_bulk_fraction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">hollow_shell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wolfram_kernel</span> <span class="o">=</span> <span class="n">wolfram_kernel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">WolframLanguageSession</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wolfram_kernel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_bulk_fraction</span> <span class="o">=</span> <span class="n">fix_bulk_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span> <span class="o">=</span> <span class="n">hollow_shell</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_bulk_fraction</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano_fix_bulk_fraction_hollow_shell.wl&quot;</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano_fix_bulk_fraction.wl&quot;</span><span class="p">))</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano_hollow_shell.wl&quot;</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano.wl&quot;</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Rule\[Global`(.*?), (.*?)]&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">column</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;dP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dA&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;fA&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nAA&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nPP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nAP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nPA&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DA&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DAP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nAM_AP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nPM_AP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nAA_AP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nAP_AP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nPA_AP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nPP_AP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;XAP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;XA&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;XP&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;y&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_hollow</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">dP</span><span class="o">=</span><span class="mf">2.77</span><span class="p">,</span>
@@ -196,10 +256,38 @@
             <span class="n">DA</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
             <span class="n">DP</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">DAPh</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DecomNano.respawn_kernel"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.respawn_kernel">[docs]</a>    <span class="k">def</span> <span class="nf">respawn_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">WolframLanguageSession</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wolfram_kernel</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_bulk_fraction</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano_fix_bulk_fraction_hollow_shell.wl&quot;</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano_fix_bulk_fraction.wl&quot;</span><span class="p">))</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano_hollow_shell.wl&quot;</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">wl</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;decomnano.wl&quot;</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="DecomNano.init_input"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.init_input">[docs]</a>    <span class="k">def</span> <span class="nf">init_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the input dictionary of DecomNano class.</span>
@@ -222,6 +310,7 @@
             <span class="n">DA</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
             <span class="n">DP</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">DAPh</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -249,9 +338,14 @@
 <div class="viewcode-block" id="DecomNano.solve_decomnano"><a class="viewcode-back" href="../../decomnano.html#decomnano.decomnano.DecomNano.solve_decomnano">[docs]</a>    <span class="k">def</span> <span class="nf">solve_decomnano</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Solves the heterogeneity analysis of bimetallic nanoparticles using coordination numbers obtained from XAS analysis.&quot;&quot;&quot;</span>
 
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
-            <span class="n">wlexpr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decomnano_equation</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                <span class="n">wlexpr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decomnano_equation_hollow</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                <span class="n">wlexpr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decomnano_equation</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
+            <span class="p">)</span>
 
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
@@ -269,6 +363,10 @@
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">input_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span><span class="p">:</span>
+            <span class="n">input_df</span> <span class="o">=</span> <span class="n">input_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;DAPh&quot;</span><span class="p">)</span>
+
         <span class="n">input_columns</span> <span class="o">=</span> <span class="n">input_df</span><span class="o">.</span><span class="n">index</span>
 
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">input_columns</span><span class="p">]</span> <span class="o">==</span> <span class="n">input_df</span>

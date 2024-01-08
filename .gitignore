@@ -166,4 +166,9 @@ cython_debug/
 .DS_Store
 
 # Backup
+<<<<<<< HEAD
 backup
+=======
+backup
+examples/sweep/*.csv
+>>>>>>> 2cb53ab (add missed files)

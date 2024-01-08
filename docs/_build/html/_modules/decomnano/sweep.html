@@ -81,6 +81,7 @@
 <span></span><span class="kn">from</span> <span class="nn">decomnano</span> <span class="kn">import</span> <span class="n">DecomNano</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 
 <div class="viewcode-block" id="SweepDecomNano"><a class="viewcode-back" href="../../decomnano.html#decomnano.sweep.SweepDecomNano">[docs]</a><span class="k">class</span> <span class="nc">SweepDecomNano</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -171,8 +172,24 @@
 <span class="sd">        +-------------------------------------------+------------+-----------------------------------------------------------------------+</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wolfram_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="n">DecomNano</span><span class="p">(</span><span class="n">wolfram_kernel</span><span class="o">=</span><span class="n">wolfram_kernel</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">wolfram_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fix_bulk_fraction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">respawn_interval</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">hollow_shell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">respawn_interval</span> <span class="o">=</span> <span class="n">respawn_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_bulk_fraction</span> <span class="o">=</span> <span class="n">fix_bulk_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hollow_shell</span> <span class="o">=</span> <span class="n">hollow_shell</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="n">DecomNano</span><span class="p">(</span>
+            <span class="n">wolfram_kernel</span><span class="o">=</span><span class="n">wolfram_kernel</span><span class="p">,</span>
+            <span class="n">fix_bulk_fraction</span><span class="o">=</span><span class="n">fix_bulk_fraction</span><span class="p">,</span>
+            <span class="n">hollow_shell</span><span class="o">=</span><span class="n">hollow_shell</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_input</span><span class="p">(</span><span class="n">input_default</span><span class="o">=</span><span class="n">input_default</span><span class="p">,</span> <span class="n">input_config</span><span class="o">=</span><span class="n">input_config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calc_input_range</span><span class="p">()</span>
 
@@ -189,6 +206,7 @@
             <span class="n">DA</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
             <span class="n">DP</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">DAPh</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -202,6 +220,7 @@
             <span class="n">DA</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
             <span class="n">DAP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
             <span class="n">DP</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+            <span class="n">DAPh</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">input_default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -282,7 +301,7 @@
             <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
                 <span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">],</span>
+                        <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]),</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span>
                         <span class="n">resolution</span><span class="p">,</span>
                     <span class="p">),</span>
@@ -290,7 +309,7 @@
                 <span class="p">)</span>
             <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
                 <span class="n">input_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">],</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]),</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">input_default</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -320,15 +339,20 @@
         <span class="n">input_iteration</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">input_range_list</span><span class="p">)</span>
 
         <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">input_iteration</span><span class="p">:</span>
+        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">input_iteration</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_input_from_list</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">calc_decomnano</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
 
-            <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="n">save_interval</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="s2">&quot;DAP&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="s2">&quot;DAPh&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">calc_decomnano</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># num = num % save_interval</span>
+
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="n">save_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">print_input</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">savepath</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">respawn_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">respawn_kernel</span><span class="p">()</span>
 
             <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
 
@@ -367,18 +391,21 @@
         <span class="n">input_iteration</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">input_range_list</span><span class="p">)</span>
 
         <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">input_iteration</span><span class="p">:</span>
+        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">input_iteration</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_input_from_list</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
 
             <span class="c1"># update input to constrain parameters[1] to be the same as parameters[0]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_input</span><span class="p">({</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nb">input</span><span class="p">[</span><span class="n">index_param0</span><span class="p">]})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">calc_decomnano</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
 
-            <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="n">save_interval</span>
+            <span class="c1"># num = num % save_interval</span>
 
-            <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="n">save_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">print_input</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">savepath</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">respawn_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">respawn_kernel</span><span class="p">()</span>
 
             <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
 
